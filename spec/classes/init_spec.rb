@@ -107,6 +107,7 @@ describe 'postfix' do
         it { should contain_file('postfix_main.cf').with_content(/^relayhost = mailhost.test.local:25$/) }
         it { should contain_file('postfix_main.cf').with_content(/^setgid_group = #{v[:main_setgid_group_default]}$/) }
         it { should_not contain_file('postfix_main.cf').with_content(/^virtual_alias_maps = hash:\/etc\/postfix\/virtual$/) }
+        it { should_not contain_file('postfix_main.cf').with_content(/^mailbox_command =/) }
 
 
         # file { 'postfix_virtual' :}
@@ -320,6 +321,12 @@ describe 'postfix' do
       let(:params) { { 'main_inet_protocols' => 'ipv6' } }
 
       it { should contain_file('postfix_main.cf').with_content(/^inet_protocols = ipv6$/) }
+    end
+
+    context 'with main_mailbox_command set to </usr/bin/procmail>' do
+      let(:params) { { 'main_mailbox_command' => '/usr/bin/procmail' } }
+
+      it { should contain_file('postfix_main.cf').with_content(/^mailbox_command = \/usr\/bin\/procmail$/) }
     end
 
     context 'with main_mailbox_size_limit set to <USE_DEFAULTS>' do
@@ -630,6 +637,16 @@ describe 'postfix' do
         expect {
           should contain_class('postfix')
         }.to raise_error(Puppet::Error, /^main_inet_protocols must contain a valid value and is set to <>/)
+      end
+    end
+
+    context 'with main_mailbox_command set to invalid <non-string>' do
+      let(:params) { { 'main_mailbox_command' => ['non','string'] } }
+
+      it do
+        expect {
+          should contain_class('postfix')
+        }.to raise_error(Puppet::Error, /is not a string/)
       end
     end
 
