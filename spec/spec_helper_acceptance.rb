@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-require 'puppet_litmus'
-PuppetLitmus.configure!
+require 'voxpupuli/acceptance/spec_helper_acceptance'
 
-require 'spec_helper_acceptance_local' if File.file?(File.join(File.dirname(__FILE__), 'spec_helper_acceptance_local.rb'))
+configure_beaker do |host|
+  # Install iproute for ss command on EL-based systems
+  install_package(host, 'iproute') if fact_on(host, 'os.family') == 'RedHat'
+end

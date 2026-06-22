@@ -1,12 +1,23 @@
 # frozen_string_literal: true
 
-require 'bundler'
-require 'puppet_litmus/rake_tasks' if Gem.loaded_specs.key? 'puppet_litmus'
-require 'puppetlabs_spec_helper/rake_tasks'
-require 'puppet-syntax/tasks/puppet-syntax'
-require 'puppet-strings/tasks' if Gem.loaded_specs.key? 'puppet-strings'
+begin
+  require 'voxpupuli/test/rake'
+rescue LoadError
+  begin
+    require 'puppetlabs_spec_helper/rake_tasks'
+  rescue LoadError
+    # Neither available - acceptance-only run
+  end
+end
 
-PuppetLint.configuration.send('disable_relative')
-PuppetLint.configuration.send('disable_80chars')
-PuppetLint.configuration.send('disable_140chars')
+begin
+  require 'voxpupuli/acceptance/rake'
+rescue LoadError
+  # voxpupuli-acceptance not available
+end
 
+begin
+  require 'puppet-strings/tasks'
+rescue LoadError
+  # puppet-strings not available
+end
