@@ -4,27 +4,30 @@ require 'spec_helper_acceptance'
 
 describe 'postfix with transport_maps set' do
   pp = <<-MANIFEST
-    # RedHad based OS flavours containers have problems with ipv6, so we use ipv4 only for testing
-    if "${facts['os']['name']}-${facts['os']['release']['major']}" in ['AlmaLinux-8', 'CentOS-9', 'Rocky-8'] {
+    if $facts['os']['family'] == 'RedHat' {
       class { 'postfix':
         main_inet_protocols => 'ipv4',
-        main_transport_maps => '/etc/postfix/transport', # needed for OS flavours without given default value
-        transport_maps => {
+        main_transport_maps => '/etc/postfix/transport',
+        transport_maps      => {
           'test@test.ing' => 'test.ing',
         },
       }
     } else {
       class { 'postfix':
-        main_transport_maps => '/etc/postfix/transport', # needed for OS flavours without given default value
-        transport_maps => {
+        main_transport_maps => '/etc/postfix/transport',
+        transport_maps      => {
           'test@test.ing' => 'test.ing',
         },
       }
     }
   MANIFEST
 
-  it 'applies the manifest twice with no stderr' do
-    idempotent_apply(pp)
+  it 'applies the manifest without errors' do
+    apply_manifest(pp, catch_failures: true)
+  end
+
+  it 'is idempotent' do
+    apply_manifest(pp, catch_changes: true)
   end
 
   describe service('postfix') do
@@ -39,10 +42,10 @@ describe 'postfix with transport_maps set' do
   describe file('/etc/postfix/transport') do
     it { is_expected.to exist }
     it { is_expected.to be_file }
-    it { is_expected.to be_mode 6_44 }
+    it { is_expected.to be_mode 644 }
     it { is_expected.to be_owned_by 'root' }
     it { is_expected.to be_grouped_into 'root' }
-    its(:content) { is_expected.to match %r{test@test.ing\s*test.ing} }
+    its(:content) { is_expected.to match %r{test@test\.ing\s*test\.ing} }
   end
 
   describe file('/etc/postfix/transport.db') do
