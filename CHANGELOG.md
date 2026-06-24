@@ -1,5 +1,13 @@
 # Changelog
 
+## [v4.1.0](https://github.com/Ericsson/puppet-module-postfix/tree/v4.1.0) (2026-06-24)
+
+[Full Changelog](https://github.com/Ericsson/puppet-module-postfix/compare/v4.0.0...v4.1.0)
+
+**Merged pull requests:**
+
+- El10 [\#84](https://github.com/Ericsson/puppet-module-postfix/pull/84) ([dsundq](https://github.com/dsundq))
+
 ## [v4.0.0](https://github.com/Ericsson/puppet-module-postfix/tree/v4.0.0) (2025-02-21)
 
 [Full Changelog](https://github.com/Ericsson/puppet-module-postfix/compare/v3.0.1...v4.0.0)

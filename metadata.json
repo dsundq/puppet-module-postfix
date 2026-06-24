@@ -1,6 +1,6 @@
 {
   "name": "ericsson-postfix",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "author": "ericsson",
   "summary": "Manage Postfix",
   "license": "Apache-2.0",
@@ -18,7 +18,8 @@
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
         "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {
@@ -39,7 +40,8 @@
       "operatingsystem": "Rocky",
       "operatingsystemrelease": [
         "8",
-        "9"
+        "9",
+        "10"
       ]
     },
     {
